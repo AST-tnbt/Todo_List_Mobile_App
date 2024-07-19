@@ -5,6 +5,9 @@ import TaskItem from './Components/TaskItem';
 export default function App() {
   const [task, setTask] = useState();
   const [taskItems, setTaskItems] = useState([]);
+  const [activeBtn, setActiveBtn] = useState("Pending");
+
+  const listBtn = ["Pending", "Completed", "Overdue"];
 
   const handleSubmit = () => {
     Keyboard.dismiss();
@@ -26,7 +29,20 @@ export default function App() {
         }}
         keyboardShouldPersistTaps='handled'
       >
-        <Text style={styles.title} >Today's tasks</Text>
+        <Text style={styles.title} >Your task list</Text>
+        <View style={styles.filterBtnContainer}>
+          {
+            listBtn.map((btn, index) => {
+              return (
+                <View style={activeBtn == btn ? styles.activeBtn : styles.filterBtn} key={index}>
+                  <TouchableOpacity onPress={() => setActiveBtn(btn)}>
+                    <Text>{btn}</Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })
+          }
+        </View>
         <View style={styles.taskContainer}>
           {
             taskItems.map((item, index) => {
@@ -44,7 +60,6 @@ export default function App() {
         behavior={Platform.OS === "ios" ? "padding" : "height "}
         style={styles.writeTaskWrapper}
       >
-        <TextInput style={styles.input} placeholder={'Write a task'} onChangeText={text => setTask(text)} value={task}/>
         <TouchableOpacity onPress={handleSubmit}>
           <View style={styles.addWrapper}>
             <Text style={styles.addIcon}>+</Text>
@@ -58,7 +73,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8EAED',
+    backgroundColor: "#E8EAED",
   },
   title: {
     paddingTop: 80,
@@ -71,34 +86,50 @@ const styles = StyleSheet.create({
     padding: 20
   },
   writeTaskWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    position: 'absolute',
-    bottom: 60,
-    width: '100%'
+    alignItems: "center",
+    position: "absolute",
+    bottom: 40,
+    width: "100%"
   }
   ,input: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     padding: 15,
     width: 250,
     borderRadius: 60,
-    textAlign: 'center',
+    textAlign: "center",
     borderWidth: 1,
-    borderColor: '#C0C0C0',
+    borderColor: "#C0C0C0",
   }
   ,addWrapper: {
-    backgroundColor: '#FFF',
-    height: 60,
-    width: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#0099DD",
+    height: 80,
+    width: 80,
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 60,
-    borderWidth: 1,
-    borderColor: '#C0C0C0',
   }
   ,addIcon: {
-    fontSize: 24,
-    color: '#C0C0C0',
+    fontSize: 36,
+    color: "#FFF",
+  },
+  filterBtnContainer: {
+    marginLeft: 20,
+    marginTop: 20,
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  filterBtn: {
+    padding: 6,
+    backgroundColor: "#FFF",
+    marginRight: 16,
+    borderRadius: 10,
+  },
+  activeBtn: {
+    padding: 6,
+    backgroundColor: "#FFF",
+    marginRight: 16,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#0099DD",
   }
 });
