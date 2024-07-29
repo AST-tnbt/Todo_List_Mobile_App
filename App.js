@@ -1,18 +1,22 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
 import TaskItem from './Components/TaskItem';
+import { Modal } from 'react-native';
+import AddTaskBox from './Components/AddTaskBox';
 
 export default function App() {
   const [task, setTask] = useState();
   const [taskItems, setTaskItems] = useState([]);
   const [activeBtn, setActiveBtn] = useState("Pending");
+  const [visible, setVisible] = useState(false);
 
   const listBtn = ["Pending", "Completed", "Overdue"];
 
-  const handleSubmit = () => {
-    Keyboard.dismiss();
-    setTaskItems([...taskItems, task]);
-    setTask(null);
+  const handleAddBtn = () => {
+    // Keyboard.dismiss();
+    // setTaskItems([...taskItems, task]);
+    // setTask(null);
+    setVisible(true);
   }
 
   const completeTask = (index) => {
@@ -55,17 +59,18 @@ export default function App() {
           }
         </View>
       </ScrollView>
-      
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height "}
-        style={styles.writeTaskWrapper}
-      >
-        <TouchableOpacity onPress={handleSubmit}>
+      <View style={styles.writeTaskWrapper}>
+        <TouchableOpacity onPress={handleAddBtn}>
           <View style={styles.addWrapper}>
             <Text style={styles.addIcon}>+</Text>
           </View>
         </TouchableOpacity>
-      </KeyboardAvoidingView>
+      </View>
+      <Modal visible={visible} animationType="fade" style={styles.modal} transparent>
+          <View style={styles.box}>
+            <AddTaskBox setVisible={setVisible}/>
+          </View>
+      </Modal>
     </View>
   );
 }
@@ -131,5 +136,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     borderColor: "#0099DD",
+  },
+  box : {
+    height: "100%",
+    width: "100%"
+  },
+  modal : {
+    backgroundColor: "#333",
+    height: "100%",
+    width: "100%",
+    opacity: .8,
   }
 });
